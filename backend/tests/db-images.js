@@ -6,7 +6,8 @@ async function initial() {
 
     Images.create({
         imgLoc: '/temp/path',
-        likes: 0
+        likes: 0,
+        UserId: 1
     }).then(value => {
         Images.findAll({
             where: {
