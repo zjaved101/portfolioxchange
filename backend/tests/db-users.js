@@ -1,5 +1,6 @@
 const Users = require('../library/model/users');
 const bcryptjs = require('bcryptjs');
+const crypto = require("crypto");
 
 async function initial() {
     await Users.sync({ force: true });
@@ -13,6 +14,7 @@ async function initial() {
                 firstName: 'John',
                 lastName: 'Doe',
                 portfolio: [],
+                token: crypto.randomBytes(16).toString("hex"),
             }).then(value => {
                 Users.findAll({
                     where: {
@@ -22,6 +24,7 @@ async function initial() {
                     console.log("All users:", JSON.stringify(results, null, 2));
                     console.log(results[0].id);
                     console.log(results[0].email);
+                    console.log(results[0].token);
                 });
             }).catch(err => {
                 console.log(err)

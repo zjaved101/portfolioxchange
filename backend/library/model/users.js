@@ -20,6 +20,10 @@ const Users = sequelize.define('Users', {
     portfolio: {
       type: DataTypes.JSON,
       allowNull: false
+    },
+    token: {
+      type: DataTypes.STRING,
+      allowNull: false
     }
   }, {
     // Other model options go here
