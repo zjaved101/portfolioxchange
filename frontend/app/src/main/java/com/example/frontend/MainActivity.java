@@ -1,76 +1,55 @@
 package com.example.frontend;
 
-import android.os.Bundle;
-
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.View;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import com.example.frontend.databinding.ActivityMainBinding;
-
-import android.view.Menu;
-import android.view.MenuItem;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AppBarConfiguration appBarConfiguration;
-    private ActivityMainBinding binding;
+    TextView view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        getLogins();
+    }
 
-        setSupportActionBar(binding.toolbar);
-
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
-        binding.fab.setOnClickListener(new View.OnClickListener() {
+    private void getLogins() {
+        view = findViewById(R.id.title);
+        System.out.println("Inside getLogins");
+//        Call<User> call = RetrofitClient.getInstance().getMyApi().postLogin(new Login("john.doe@email.com", "1234"));
+        Call<User> call = RetrofitClient.getInstance().getMyApi().getUser();
+        System.out.println("about to queue");
+        view.setText("about to queue");
+        call.enqueue(new Callback<User>() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onResponse(Call<User> call, Response<User> response) {
+                System.out.println("INSIDE RESPONSE");
+                view.setText("inside response");
+                if(response.isSuccessful() && response.body() != null) {
+                    User login = response.body();
+                    System.out.println(login.getFirstName());
+                    view.setText(String.valueOf(login.getId()));
+                } else {
+                    System.out.println("Response broke");
+                }
             }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.e("onFailure error", t.getMessage());
+                Toast.makeText(getApplicationContext(), "An error has occurred", Toast.LENGTH_LONG).show();
+            }
+
         });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
     }
 }
