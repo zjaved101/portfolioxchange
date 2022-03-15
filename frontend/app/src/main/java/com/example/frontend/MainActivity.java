@@ -2,8 +2,11 @@ package com.example.frontend;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,36 +23,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getLogins();
+        final Button login = findViewById(R.id.login);
+        login.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                login(v);
+            }
+        });
     }
 
-    private void getLogins() {
-        view = findViewById(R.id.title);
-        System.out.println("Inside getLogins");
-        Call<User> call = RetrofitClient.getInstance().getMyApi().postLogin(new Login("john.doe@email.com", "1234"));
-//        Call<User> call = RetrofitClient.getInstance().getMyApi().getUser();
-        System.out.println("about to queue");
-        view.setText("about to queue");
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                System.out.println("INSIDE RESPONSE");
-                view.setText("inside response");
-                if(response.isSuccessful() && response.body() != null) {
-                    User login = response.body();
-                    System.out.println(login.getFirstName());
-                    view.setText(String.valueOf(login.getId()));
-                } else {
-                    System.out.println("Response broke");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Log.e("onFailure error", t.getMessage());
-                Toast.makeText(getApplicationContext(), "An error has occurred", Toast.LENGTH_LONG).show();
-            }
-
-        });
+    private void login(View view) {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 }
