@@ -26,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
     private void getLogins() {
         view = findViewById(R.id.title);
         System.out.println("Inside getLogins");
-//        Call<User> call = RetrofitClient.getInstance().getMyApi().postLogin(new Login("john.doe@email.com", "1234"));
-        Call<User> call = RetrofitClient.getInstance().getMyApi().getUser();
+        Call<User> call = RetrofitClient.getInstance().getMyApi().postLogin(new Login("john.doe@email.com", "1234"));
+//        Call<User> call = RetrofitClient.getInstance().getMyApi().getUser();
         System.out.println("about to queue");
         view.setText("about to queue");
         call.enqueue(new Callback<User>() {
