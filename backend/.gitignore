@@ -62,3 +62,10 @@ typings/
 
 # mysql table creation
 config/tables.txt
+
+# images for testing
+test-images
+
+# DS-store
+*.DS_Store
+*/.DS_Store

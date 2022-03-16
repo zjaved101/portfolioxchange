@@ -7,7 +7,12 @@ async function initial() {
     Images.create({
         imgLoc: '/temp/path',
         likes: 0,
-        UserId: 1
+        UserId: 1,
+        title: 'Test',
+        description: 'test',
+        tags: ['nature'],
+        imgType: 'jpg',
+        likeList: []
     }).then(value => {
         Images.findAll({
             where: {
