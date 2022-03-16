@@ -1,5 +1,8 @@
 package com.example.frontend;
 
+import com.example.frontend.model.Login;
+import com.example.frontend.model.User;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;

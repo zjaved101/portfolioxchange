@@ -10,6 +10,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.frontend.model.Login;
+import com.example.frontend.model.User;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
