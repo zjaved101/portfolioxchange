@@ -14,6 +14,8 @@ async function initial() {
                 firstName: 'John',
                 lastName: 'Doe',
                 portfolio: [],
+                uploadCount: 1,
+                likeCount: 0,
                 token: crypto.randomBytes(16).toString("hex"),
             }).then(value => {
                 Users.findAll({

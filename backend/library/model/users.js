@@ -24,6 +24,14 @@ const Users = sequelize.define('Users', {
     token: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    uploadCount: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    likeCount: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   }, {
     // Other model options go here
