@@ -75,4 +75,28 @@ router.post('/upload', upload.single('image'), async function(req, res, next) {
     res.send({"success": true});
 });
 
+router.get('/homepage', async (req, res) => {
+    let images = await Image.findAll({
+        order: [
+            ['likes', 'DESC']
+        ]
+    });
+
+    if (images.length) {
+        images.forEach(element => {
+            let likeList = JSON.parse(JSON.stringify(element.dataValues.likeList));
+            element.dataValues.currentUserLikes = false;
+            if(likeList.includes(parseInt(req.query.userId))) {
+                element.dataValues.currentUserLikes = true;
+            }
+        });
+        return res.send({
+            "success": true,
+            "images": images.slice(parseInt(req.query.index), parseInt(req.query.index) + parseInt(req.query.length))
+        });
+    } else {
+        return res.send({"success": false, "images": []});
+    }
+})
+
 module.exports = router;
