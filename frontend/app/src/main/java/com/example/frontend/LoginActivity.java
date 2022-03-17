@@ -2,6 +2,7 @@ package com.example.frontend;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +19,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
+//    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,13 +29,12 @@ public class LoginActivity extends AppCompatActivity {
         final Button login = findViewById(R.id.login);
         login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                login();
+                login(v);
             }
         });
     }
 
-    private void login() {
-        TextView view = findViewById(R.id.loginTitle);
+    private void login(View v) {
         EditText email = findViewById(R.id.editTextEmail);
         EditText password = findViewById(R.id.editTextPassword);
 
@@ -41,14 +42,14 @@ public class LoginActivity extends AppCompatActivity {
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                System.out.println("INSIDE RESPONSE");
-                view.setText("inside response");
                 if(response.isSuccessful() && response.body() != null) {
                     User login = response.body();
-                    System.out.println(login.getFirstName());
-                    view.setText(String.valueOf(login.getId()));
+//                    user = response.body();
+                    startHomeActivity(v, login);
                 } else {
-                    System.out.println("Response broke");
+//                    System.out.println("Response broke");
+                    Log.e("onFailure error", "Response broke");
+                    Toast.makeText(getApplicationContext(), "Login failed, please try again", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -59,5 +60,14 @@ public class LoginActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    private void startHomeActivity(View v, User user) {
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.putExtra("userId",user.getId());
+        intent.putExtra("firstName", user.getFirstName());
+        intent.putExtra("lastName", user.getLastName());
+        intent.putExtra("token", user.getToken());
+        startActivity(intent);
     }
 }
