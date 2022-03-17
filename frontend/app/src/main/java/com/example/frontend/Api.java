@@ -1,12 +1,17 @@
 package com.example.frontend;
 
+import com.example.frontend.model.Image;
 import com.example.frontend.model.Login;
 import com.example.frontend.model.User;
+import com.example.frontend.response.HomePageResponse;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface Api {
 
@@ -14,6 +19,11 @@ public interface Api {
     @POST("authenticate/signin")
     Call<User> postLogin(@Body Login login);
 
-    @GET("authenticate/test")
-    Call<User> getUser();
+    @GET("images/homepage")
+    Call<HomePageResponse> getHomePage(
+            @Query("userId") int userId,
+            @Query("index") int index,
+            @Query("length") int length
+    );
+
 }
