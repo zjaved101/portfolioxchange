@@ -5,16 +5,20 @@ import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.frontend.model.Image;
+import com.example.frontend.model.User;
 import com.example.frontend.response.HomePageResponse;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,6 +33,7 @@ public class HomeActivity extends AppCompatActivity {
     private ProgressBar loadingPB;
     private NestedScrollView nestedSV;
     private Bundle extras;
+    private Button uploadPageBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +45,12 @@ public class HomeActivity extends AppCompatActivity {
         imageRV = findViewById(R.id.images);
         loadingPB = findViewById(R.id.loading);
         nestedSV = findViewById(R.id.nestedSV);
+        uploadPageBtn = findViewById(R.id.uploadPageBtn);
+        uploadPageBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startUploadActivity(v);
+            }
+        });
 
         imageModalArrayList = new ArrayList<>();
 
@@ -57,14 +68,20 @@ public class HomeActivity extends AppCompatActivity {
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 // on scroll change checking when users scroll as bottom.
                 if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
-                    count++;
                     loadingPB.setVisibility(View.VISIBLE);
-                    if (count < 5) {
-                        getData(extras.getInt("userId"), 1, 100);
-                    }
+                    getData(extras.getInt("userId"), 1, 100);
                 }
             }
         });
+    }
+
+    private void startUploadActivity(View v) {
+        Intent intent = new Intent(this, UploadActivity.class);
+        intent.putExtra("userId",extras.getInt("userId"));
+        intent.putExtra("firstName", extras.getString("firstName"));
+        intent.putExtra("lastName", extras.getString("lastName"));
+        intent.putExtra("token", extras.getString("token"));
+        startActivity(intent);
     }
 
     private void getData(int userId, int index, int length) {
@@ -77,15 +94,16 @@ public class HomeActivity extends AppCompatActivity {
                 Log.d("getData", "INSIDE RESPONSE");
                 Log.d("getData", response.toString());
                 if(response.isSuccessful() && response.body() != null) {
-                    HomePageResponse homepage = response.body();
-                    for (Image elem : homepage.getImages()) {
+                    List<Image> images = response.body().getImages();
+                    for(int i = count; i < images.size(); i++) {
+                        Image elem = images.get(i);
                         Log.d("getData", elem.getDescription());
-
                         imageModalArrayList.add(new ImageModal(elem.getTitle(), elem.getDescription(), elem.getImgLoc()));
                         imageRVAdapter = new ImageRVAdapter(HomeActivity.this, imageModalArrayList);
                         imageRV.setAdapter(imageRVAdapter);
                     }
                     loadingPB.setVisibility(View.INVISIBLE);
+                    count = images.size();
                 } else {
                     Log.d("onResponse","response broke");
                 }

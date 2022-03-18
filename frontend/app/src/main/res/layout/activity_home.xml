@@ -24,6 +24,12 @@
             android:id="@+id/loading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/uploadPageBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/upload_page" />
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
