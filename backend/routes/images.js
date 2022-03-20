@@ -32,6 +32,18 @@ const upload = multer({storage: ImgurStorage({ clientId: process.env.IMGUR_CLIEN
 router.post('/upload', upload.single('image'), async function(req, res, next) {
     console.log(req.file, req.body)
 
+    // need to do this due to retrofit from Java (Android)
+    let tags = [];
+    if(Array.isArray(req.body.tags)) {
+        req.body.tags.forEach(element => {
+            tags.push(element.replace(/['"]+/g, ''));
+        });
+    } else {
+        tags.push(req.body.tags.replace(/['"]+/g, ''));
+    }
+    
+    console.log(tags);
+
     let users = await User.findAll({
         where: {
             id: req.body.userId
@@ -66,7 +78,8 @@ router.post('/upload', upload.single('image'), async function(req, res, next) {
         description: req.body.description,
         UserId: parseInt(req.body.userId),
         imgType: req.file.originalname.split('.')[1],
-        tags: JSON.parse(req.body.tags),
+        // tags: JSON.parse(req.body.tags),
+        tags: tags,
         likes: 0,
         likeList: [],
         imgLoc: req.file.link
