@@ -2,15 +2,21 @@ package com.example.frontend;
 
 import com.example.frontend.model.Image;
 import com.example.frontend.model.Login;
+import com.example.frontend.model.Upload;
 import com.example.frontend.model.User;
+import com.example.frontend.response.GeneralResponse;
 import com.example.frontend.response.HomePageResponse;
 
-import java.util.List;
+import java.util.ArrayList;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
 
 public interface Api {
@@ -26,4 +32,13 @@ public interface Api {
             @Query("length") int length
     );
 
+    @Multipart
+    @POST("images/upload")
+    Call<GeneralResponse> uploadImage(
+            @Part("userId") Integer userId,
+            @Part("title") RequestBody title,
+            @Part("description") RequestBody description,
+            @Part("tags") ArrayList<String> tags,
+            @Part MultipartBody.Part image
+    );
 }
