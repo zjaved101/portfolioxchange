@@ -2,6 +2,7 @@ package com.example.frontend;
 
 import com.example.frontend.model.Image;
 import com.example.frontend.model.Login;
+import com.example.frontend.model.Signup;
 import com.example.frontend.model.Upload;
 import com.example.frontend.model.User;
 import com.example.frontend.response.GeneralResponse;
@@ -22,8 +23,12 @@ import retrofit2.http.Query;
 public interface Api {
 
     String BASE_URL = "http://192.168.1.237:3000/api/";
+
     @POST("authenticate/signin")
     Call<User> postLogin(@Body Login login);
+
+    @POST("authenticate/signup")
+    Call<User> signup(@Body Signup signup);
 
     @GET("images/homepage")
     Call<HomePageResponse> getHomePage(

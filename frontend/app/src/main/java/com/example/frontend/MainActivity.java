@@ -29,10 +29,22 @@ public class MainActivity extends AppCompatActivity {
                 login(v);
             }
         });
+
+        final Button signup = findViewById(R.id.signup);
+        signup.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                signup(v);
+            }
+        });
     }
 
     private void login(View view) {
         Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    private void signup(View view) {
+        Intent intent = new Intent(this, SignupActivity.class);
         startActivity(intent);
     }
 }
