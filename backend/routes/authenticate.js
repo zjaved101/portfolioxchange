@@ -4,6 +4,7 @@ const passport = require('../library/passport/passport');
 const Users = require('../library/model/users');
 const bcryptjs = require('bcryptjs');
 const crypto = require("crypto");
+const { token } = require('morgan');
 
 require('dotenv').config();
 
@@ -25,9 +26,23 @@ router.post('/signup', function(req, res, next) {
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 portfolio: [],
+                uploadCount: 0,
+                likeCount: 0,
                 token: crypto.randomBytes(16).toString("hex"),
             }).then(result => {
-                return res.json({'success': true});
+                Users.findAll({
+                    where: {
+                        email: req.body.email
+                    }
+                }).then(results => {
+                    return res.status(200).json({
+                        'id': results[0].id,
+                        'firstName': results[0].firstName,
+                        'lastName': results[0].lastName,
+                        'token': results[0].token,
+                        'success': true
+                    });
+                });
             }).catch(err => {
                 return res.status(400).json({'error': 'user creation error', 'success': false});
             });
