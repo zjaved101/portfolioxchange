@@ -1,10 +1,12 @@
 package com.example.frontend;
 
+import com.example.frontend.Body.LikeBody;
 import com.example.frontend.model.Image;
 import com.example.frontend.model.Login;
 import com.example.frontend.model.Signup;
 import com.example.frontend.model.Upload;
 import com.example.frontend.model.User;
+import com.example.frontend.response.DetailResponse;
 import com.example.frontend.response.GeneralResponse;
 import com.example.frontend.response.HomePageResponse;
 
@@ -46,4 +48,15 @@ public interface Api {
             @Part("tags") ArrayList<String> tags,
             @Part MultipartBody.Part image
     );
+
+    @GET("images/details")
+    Call<Image> getImageDetails(
+      @Query("imageId") Integer imageId
+    );
+
+    @POST("images/like")
+    Call<DetailResponse> like(@Body LikeBody body);
+
+    @POST("images/dislike")
+    Call<DetailResponse> dislike(@Body LikeBody body);
 }

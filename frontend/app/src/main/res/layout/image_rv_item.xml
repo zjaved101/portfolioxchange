@@ -48,6 +48,32 @@
                 android:padding="2dp"
                 android:text="Description"
                 android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/imageTags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:text="Tags"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/imageId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:text=""
+                android:visibility="invisible"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/userId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:text=""
+                android:visibility="invisible"
+                android:textColor="@color/black" />
         </LinearLayout>
 
     </RelativeLayout>

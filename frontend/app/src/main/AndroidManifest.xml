@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Frontend"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ImageDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".SignupActivity"
             android:exported="false" />
         <activity
