@@ -47,7 +47,6 @@ public class ImageDetailActivity extends AppCompatActivity {
 
         extras = getIntent().getExtras();
         getImageDetails();
-//        result = Integer.parseInt(imageDetailLikes.getText().toString());
 
         likeBtn = findViewById(R.id.imageDetailLike);
         likeBtn.setOnClickListener(new View.OnClickListener() {
@@ -55,11 +54,6 @@ public class ImageDetailActivity extends AppCompatActivity {
             public void onClick(View view) {
                 likeImage(view);
                 imageDetailLikes.setText(Integer.toString(result));
-//                imageDetailLikes.postInvalidate();
-//                imageDetailLikes.invalidate();
-//                imageDetailLikes.refreshDrawableState();
-//                imageDetailLikes.refreshDrawableState();
-//                view.refreshDrawableState();
                 likeBtn.setEnabled(false);
                 dislikeBtn.setEnabled(true);
             }
@@ -71,11 +65,6 @@ public class ImageDetailActivity extends AppCompatActivity {
             public void onClick(View view) {
                 dislikeImage(view);
                 imageDetailLikes.setText(Integer.toString(result));
-//                imageDetailLikes.postInvalidate();
-//                imageDetailLikes.invalidate();
-//                imageDetailLikes.refreshDrawableState();
-//                imageDetailLikes.refreshDrawableState();
-//                view.refreshDrawableState();
                 likeBtn.setEnabled(true);
                 dislikeBtn.setEnabled(false);
             }
@@ -117,14 +106,8 @@ public class ImageDetailActivity extends AppCompatActivity {
                 if(response.isSuccessful() && response.body() != null) {
                     DetailResponse detailResponse = response.body();
                     Log.d("onResponse", Boolean.toString(detailResponse.hasLiked()));
-//                    if(detailResponse.isSuccess() && !detailResponse.hasLiked()) {
                     if(detailResponse.isSuccess()) {
                         int currentLikes = Integer.parseInt(imageDetailLikes.getText().toString());
-////                        imageDetailLikes.invalidate();
-//                        imageDetailLikes.setText(Integer.toString(currentLikes + 1));
-////                        imageDetailLikes.setText("LIKED");
-//                        likeBtn.setEnabled(false);
-//                        dislikeBtn.setEnabled(true);
                         result = currentLikes + 1;
                         Toast.makeText(getApplicationContext(), "Successfully liked image", Toast.LENGTH_LONG).show();
                     } else {
@@ -151,17 +134,9 @@ public class ImageDetailActivity extends AppCompatActivity {
                 if(response.isSuccessful() && response.body() != null) {
                     DetailResponse detailResponse = response.body();
                     Log.d("onResponse", Boolean.toString(detailResponse.hasLiked()));
-//                    if(detailResponse.isSuccess() && detailResponse.hasLiked()) {
                     if(detailResponse.isSuccess()) {
                         int currentLikes = Integer.parseInt(imageDetailLikes.getText().toString());
-//                        imageDetailLikes.invalidate();
-//                        imageDetailLikes.setText(Integer.toString(currentLikes - 1));
-////                        imageDetailLikes.setText("DISLIKED");
-//                        likeBtn.setEnabled(true);
-//                        dislikeBtn.setEnabled(false);
-
                         result = currentLikes - 1;
-//                        v.refreshDrawableState();
                         Toast.makeText(getApplicationContext(), "Successfully disliked image", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(getApplicationContext(), "You haven't liked this image", Toast.LENGTH_LONG).show();
