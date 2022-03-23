@@ -1,5 +1,6 @@
 package com.example.frontend;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -57,7 +59,7 @@ public class HomeActivity extends AppCompatActivity {
         imageRVAdapter = new ImageRVAdapter(HomeActivity.this, imageModalArrayList);
         imageRV.setAdapter(imageRVAdapter);
 
-        getData(extras.getInt("userId"), 1, 100);
+        getData(extras.getInt("userId"), 0, 100);
 
 
         LinearLayoutManager manager = new LinearLayoutManager(this);
@@ -69,7 +71,7 @@ public class HomeActivity extends AppCompatActivity {
                 // on scroll change checking when users scroll as bottom.
                 if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
                     loadingPB.setVisibility(View.VISIBLE);
-                    getData(extras.getInt("userId"), 1, 100);
+                    getData(extras.getInt("userId"), 0, 100);
                 }
             }
         });
@@ -98,7 +100,7 @@ public class HomeActivity extends AppCompatActivity {
                     for(int i = count; i < images.size(); i++) {
                         Image elem = images.get(i);
                         Log.d("getData", elem.getDescription());
-                        imageModalArrayList.add(new ImageModal(elem.getTitle(), elem.getDescription(), elem.getImgLoc()));
+                        imageModalArrayList.add(new ImageModal(elem.getTitle(), elem.getDescription(), elem.getTags(), elem.getId(), elem.getUserId(), elem.getImgLoc()));
                         imageRVAdapter = new ImageRVAdapter(HomeActivity.this, imageModalArrayList);
                         imageRV.setAdapter(imageRVAdapter);
                     }
