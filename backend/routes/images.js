@@ -110,6 +110,137 @@ router.get('/homepage', async (req, res) => {
     } else {
         return res.send({"success": false, "images": []});
     }
-})
+});
+
+router.get('/details', async (req, res) => {
+    console.log(req.query);
+    let images = await Image.findAll({
+        where: {
+            id: req.query.imageId
+        }
+    });
+
+    if (images.length) {
+        images.forEach(element => {
+            let likeList = JSON.parse(JSON.stringify(element.dataValues.likeList));
+            element.dataValues.currentUserLikes = false;
+            if(likeList.includes(parseInt(req.query.userId))) {
+                element.dataValues.currentUserLikes = true;
+            }
+        });
+        return res.send(images[0]);
+    } else {
+        return res.send({"success": false});
+    }
+});
+
+router.post("/like", async (req, res) => {
+    let images = await Image.findAll({
+        where: {
+            id: req.body.imageId
+        }
+    });
+
+    if(!images.length) {
+        return res.status(400).send({"success": false, "likes": false, "error": "image id does not exist"});
+    }
+
+    let users = await User.findAll({
+        where: {
+            id:req.body.userId
+        }
+    });
+    if(!users.length) {
+        return res.status(400).send({"success:": false, "likes": false, "error": "user id does not exist"});
+    }
+    let likeCount = users[0].dataValues.likeCount;
+
+    let likeList = JSON.parse(JSON.stringify(images[0].dataValues.likeList));
+    let likes = images[0].dataValues.likes;
+
+    if(!likeList.includes(req.body.userId)) {
+        console.log("updating likeList")
+        likeList.push(parseInt(req.body.userId));
+        likes += 1;
+    } else {
+        console.log("user already liked image");
+        return res.send({"success": false, "likes": true, "error": "User has already liked"});
+    }
+
+    await Image.update({
+        likes: likes,
+        likeList: likeList
+    }, {
+        where: {
+            id: req.body.imageId
+        }
+    });
+
+    await User.update({
+        likeCount: likeCount + 1,
+    }, {
+        where: {
+            id: req.body.userId
+        }
+    });
+
+    return res.send({"success": true, "likes": true});
+});
+
+router.post("/dislike", async (req, res) => {
+    let images = await Image.findAll({
+        where: {
+            id: req.body.imageId
+        }
+    });
+
+    if(!images.length) {
+        return res.status(400).send({"success": false, "likes": true, "error": "image id does not exist"});
+    }
+
+    let users = await User.findAll({
+        where: {
+            id:req.body.userId
+        }
+    });
+    if(!users.length) {
+        return res.status(400).send({"success:": false, "likes": true, "error": "user id does not exist"});
+    }
+    let likeCount = users[0].dataValues.likeCount;
+
+    let likeList = JSON.parse(JSON.stringify(images[0].dataValues.likeList));
+    let likes = images[0].dataValues.likes;
+
+    console.log(req.body, likeList, likes);
+
+    if(likeList.includes(req.body.userId)) {
+        console.log("updating likeList")
+        let index = likeList.indexOf(parseInt(req.body.userId));
+        likeList.splice(index, parseInt(req.body.userId));
+        likes -= 1;
+    } else {
+        console.log("user has not liked image");
+        return res.send({"success": false, "likes": false, "error": "User has not liked"});
+    }
+
+    await Image.update({
+        likes: likes,
+        likeList: likeList
+    }, {
+        where: {
+            id: req.body.imageId
+        }
+    });
+
+    await User.update({
+        likeCount: likeCount - 1,
+    }, {
+        where: {
+            id: req.body.userId
+        }
+    });
+
+    return res.send({"success": true, "likes": false});
+});
 
 module.exports = router;
