@@ -2,6 +2,7 @@ package com.example.frontend;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +20,14 @@ public class ImageRVAdapter extends RecyclerView.Adapter<ImageRVAdapter.ViewHold
 
     private Context context;
     private ArrayList<ImageModal> imageModalArrayList;
+    private Bundle extras;
 
-    public ImageRVAdapter(Context context, ArrayList<ImageModal> imageModalArrayList) {
+    public ImageRVAdapter(Context context, ArrayList<ImageModal> imageModalArrayList, Bundle extras) {
         this.context = context;
         this.imageModalArrayList = imageModalArrayList;
         Picasso.get().setLoggingEnabled(true);
+
+        this.extras = extras;
     }
 
     @NonNull
@@ -77,7 +81,7 @@ public class ImageRVAdapter extends RecyclerView.Adapter<ImageRVAdapter.ViewHold
         private void startImageDetailActivity(View v) {
             Intent intent = new Intent(context, ImageDetailActivity.class);
             intent.putExtra("imageId", Integer.parseInt(imageIdTV.getText().toString()));
-            intent.putExtra("userId", Integer.parseInt(userIdTV.getText().toString()));
+            intent.putExtra("userId", extras.getInt("userId"));
             context.startActivity(intent);
         }
     }

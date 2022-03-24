@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.frontend.model.Login;
@@ -19,7 +18,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
-//    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +42,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<User> call, Response<User> response) {
                 if(response.isSuccessful() && response.body() != null) {
                     User login = response.body();
-//                    user = response.body();
                     startHomeActivity(v, login);
                 } else {
-//                    System.out.println("Response broke");
                     Log.e("onFailure error", "Response broke");
                     Toast.makeText(getApplicationContext(), "Login failed, please try again", Toast.LENGTH_LONG).show();
                 }
@@ -64,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void startHomeActivity(View v, User user) {
         Intent intent = new Intent(this, HomeActivity.class);
+        Log.d("Login", Integer.toString(user.getId()));
         intent.putExtra("userId",user.getId());
         intent.putExtra("firstName", user.getFirstName());
         intent.putExtra("lastName", user.getLastName());

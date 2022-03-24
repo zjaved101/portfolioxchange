@@ -1,6 +1,5 @@
 package com.example.frontend;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,14 +8,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.frontend.model.Image;
-import com.example.frontend.model.User;
 import com.example.frontend.response.HomePageResponse;
 
 import java.util.ArrayList;
@@ -43,6 +40,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         extras = getIntent().getExtras();
+        Log.d("Home", Integer.toString(extras.getInt("userId")));
 
         imageRV = findViewById(R.id.images);
         loadingPB = findViewById(R.id.loading);
@@ -56,7 +54,7 @@ public class HomeActivity extends AppCompatActivity {
 
         imageModalArrayList = new ArrayList<>();
 
-        imageRVAdapter = new ImageRVAdapter(HomeActivity.this, imageModalArrayList);
+        imageRVAdapter = new ImageRVAdapter(HomeActivity.this, imageModalArrayList, extras);
         imageRV.setAdapter(imageRVAdapter);
 
         getData(extras.getInt("userId"), 0, 100);
@@ -75,10 +73,27 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
+
+        Button profileBtn = findViewById(R.id.profileBtn);
+        profileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startProfileActivity(view);
+            }
+        });
     }
 
     private void startUploadActivity(View v) {
         Intent intent = new Intent(this, UploadActivity.class);
+        intent.putExtra("userId",extras.getInt("userId"));
+        intent.putExtra("firstName", extras.getString("firstName"));
+        intent.putExtra("lastName", extras.getString("lastName"));
+        intent.putExtra("token", extras.getString("token"));
+        startActivity(intent);
+    }
+
+    private void startProfileActivity(View v) {
+        Intent intent = new Intent(this, ProfileActivity.class);
         intent.putExtra("userId",extras.getInt("userId"));
         intent.putExtra("firstName", extras.getString("firstName"));
         intent.putExtra("lastName", extras.getString("lastName"));
@@ -101,7 +116,7 @@ public class HomeActivity extends AppCompatActivity {
                         Image elem = images.get(i);
                         Log.d("getData", elem.getDescription());
                         imageModalArrayList.add(new ImageModal(elem.getTitle(), elem.getDescription(), elem.getTags(), elem.getId(), elem.getUserId(), elem.getImgLoc()));
-                        imageRVAdapter = new ImageRVAdapter(HomeActivity.this, imageModalArrayList);
+                        imageRVAdapter = new ImageRVAdapter(HomeActivity.this, imageModalArrayList, extras);
                         imageRV.setAdapter(imageRVAdapter);
                     }
                     loadingPB.setVisibility(View.INVISIBLE);
