@@ -39,6 +39,10 @@ router.post('/signup', function(req, res, next) {
                         'id': results[0].id,
                         'firstName': results[0].firstName,
                         'lastName': results[0].lastName,
+                        'email': results[0].email,
+                        'portfolio': results[0].portfolio,
+                        'uploadCount': results[0].uploadCount,
+                        'likeCount': results[0].likeCount,
                         'token': results[0].token,
                         'success': true
                     });

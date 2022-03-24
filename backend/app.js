@@ -11,6 +11,7 @@ require('dotenv').config();
 var indexRouter = require('./routes/index');
 var authenticateRouter = require('./routes/authenticate');
 var imagesRouter = require('./routes/images');
+var userRouter = require('./routes/users');
 
 var app = express();
 
@@ -44,6 +45,7 @@ app.use(passport.session());
 app.use('/', indexRouter);
 app.use('/api/authenticate', authenticateRouter);
 app.use('/api/images', imagesRouter);
+app.use('/api/users', userRouter);
 
 app.use(cors());
 app.options('*', cors());
