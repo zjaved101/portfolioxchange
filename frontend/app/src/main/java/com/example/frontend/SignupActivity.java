@@ -10,10 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.frontend.model.Login;
 import com.example.frontend.model.Signup;
 import com.example.frontend.model.User;
-import com.example.frontend.response.GeneralResponse;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -67,7 +65,8 @@ public class SignupActivity extends AppCompatActivity {
 
     private void startHomeActivity(View v, User user) {
         Intent intent = new Intent(this, HomeActivity.class);
-        intent.putExtra("userId",user.getId());
+        Log.d("Signup", Integer.toString(user.getId()));
+        intent.putExtra("userId", user.getId());
         intent.putExtra("firstName", user.getFirstName());
         intent.putExtra("lastName", user.getLastName());
         intent.putExtra("token", user.getToken());

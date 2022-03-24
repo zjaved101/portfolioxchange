@@ -46,6 +46,7 @@ public class ImageDetailActivity extends AppCompatActivity {
 
 
         extras = getIntent().getExtras();
+        Log.d("ImageDetail", Integer.toString(extras.getInt("userId")));
         getImageDetails();
 
         likeBtn = findViewById(R.id.imageDetailLike);

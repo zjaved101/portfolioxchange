@@ -4,7 +4,6 @@ import com.example.frontend.Body.LikeBody;
 import com.example.frontend.model.Image;
 import com.example.frontend.model.Login;
 import com.example.frontend.model.Signup;
-import com.example.frontend.model.Upload;
 import com.example.frontend.model.User;
 import com.example.frontend.response.DetailResponse;
 import com.example.frontend.response.GeneralResponse;
@@ -34,24 +33,24 @@ public interface Api {
 
     @GET("images/homepage")
     Call<HomePageResponse> getHomePage(
-            @Query("userId") int userId,
-            @Query("index") int index,
-            @Query("length") int length
+        @Query("userId") int userId,
+        @Query("index") int index,
+        @Query("length") int length
     );
 
     @Multipart
     @POST("images/upload")
     Call<GeneralResponse> uploadImage(
-            @Part("userId") Integer userId,
-            @Part("title") RequestBody title,
-            @Part("description") RequestBody description,
-            @Part("tags") ArrayList<String> tags,
-            @Part MultipartBody.Part image
+        @Part("userId") Integer userId,
+        @Part("title") RequestBody title,
+        @Part("description") RequestBody description,
+        @Part("tags") ArrayList<String> tags,
+        @Part MultipartBody.Part image
     );
 
     @GET("images/details")
     Call<Image> getImageDetails(
-      @Query("imageId") Integer imageId
+        @Query("imageId") Integer imageId
     );
 
     @POST("images/like")
@@ -59,4 +58,9 @@ public interface Api {
 
     @POST("images/dislike")
     Call<DetailResponse> dislike(@Body LikeBody body);
+
+    @GET("users/profile")
+    Call<User> getProfile(
+        @Query("userId") int userId
+    );
 }
