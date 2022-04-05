@@ -1,13 +1,17 @@
 package com.example.frontend;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -32,12 +36,14 @@ public class HomeActivity extends AppCompatActivity {
     private ProgressBar loadingPB;
     private NestedScrollView nestedSV;
     private Bundle extras;
-    private Button uploadPageBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
 
         extras = getIntent().getExtras();
         Log.d("Home", Integer.toString(extras.getInt("userId")));
@@ -45,12 +51,6 @@ public class HomeActivity extends AppCompatActivity {
         imageRV = findViewById(R.id.images);
         loadingPB = findViewById(R.id.loading);
         nestedSV = findViewById(R.id.nestedSV);
-        uploadPageBtn = findViewById(R.id.uploadPageBtn);
-        uploadPageBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                startUploadActivity(v);
-            }
-        });
 
         imageModalArrayList = new ArrayList<>();
 
@@ -73,17 +73,16 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
-
-        Button profileBtn = findViewById(R.id.profileBtn);
-        profileBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startProfileActivity(view);
-            }
-        });
     }
 
-    private void startUploadActivity(View v) {
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        getData(extras.getInt("userId"), 0, 100);
+    }
+
+    private void startUploadActivity() {
         Intent intent = new Intent(this, UploadActivity.class);
         intent.putExtra("userId",extras.getInt("userId"));
         intent.putExtra("firstName", extras.getString("firstName"));
@@ -92,7 +91,7 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void startProfileActivity(View v) {
+    private void startProfileActivity() {
         Intent intent = new Intent(this, ProfileActivity.class);
         intent.putExtra("userId",extras.getInt("userId"));
         intent.putExtra("firstName", extras.getString("firstName"));
@@ -133,5 +132,39 @@ public class HomeActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = null;
+        switch (item.getItemId()) {
+            case R.id.action_home:
+                Toast.makeText(getApplicationContext(), "Already on home page", Toast.LENGTH_LONG).show();
+                return true;
+
+            case R.id.action_search:
+//                intent = new Intent(this, CallActivity.class);
+//                startActivity(intent);
+                Toast.makeText(getApplicationContext(), "search page", Toast.LENGTH_LONG).show();
+                return true;
+
+            case R.id.action_upload:
+                startUploadActivity();
+                return true;
+
+            case R.id.action_profile:
+                startProfileActivity();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 }
