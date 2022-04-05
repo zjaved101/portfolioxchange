@@ -1,9 +1,14 @@
 package com.example.frontend;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +29,9 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
 
         extras = getIntent().getExtras();
         fullNameTV = findViewById(R.id.fullNameTV);
@@ -55,5 +63,57 @@ public class ProfileActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    private void startUploadActivity() {
+        Intent intent = new Intent(this, UploadActivity.class);
+        intent.putExtra("userId", extras.getInt("userId"));
+        intent.putExtra("firstName", extras.getString("firstName"));
+        intent.putExtra("lastName", extras.getString("lastName"));
+        intent.putExtra("token", extras.getString("token"));
+        startActivity(intent);
+    }
+
+    private void startHomeActivity() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        Log.d("Login", Integer.toString(extras.getInt("userId")));
+        intent.putExtra("userId", extras.getInt("userId"));
+        intent.putExtra("firstName", extras.getString("firstName"));
+        intent.putExtra("lastName", extras.getString("lastName"));
+        intent.putExtra("token", extras.getString("token"));
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = null;
+        switch (item.getItemId()) {
+            case R.id.action_home:
+                startHomeActivity();
+                return true;
+
+            case R.id.action_search:
+//                intent = new Intent(this, CallActivity.class);
+//                startActivity(intent);
+                Toast.makeText(getApplicationContext(), "search page", Toast.LENGTH_LONG).show();
+                return true;
+
+            case R.id.action_upload:
+                startUploadActivity();
+                return true;
+
+            case R.id.action_profile:
+                Toast.makeText(getApplicationContext(), "Already in profile", Toast.LENGTH_LONG).show();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
