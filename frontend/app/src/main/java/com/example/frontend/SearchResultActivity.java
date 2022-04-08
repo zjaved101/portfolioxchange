@@ -7,17 +7,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.frontend.model.Image;
+import com.example.frontend.model.Search;
 import com.example.frontend.response.HomePageResponse;
 
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeActivity extends AppCompatActivity {
+public class SearchResultActivity extends AppCompatActivity {
 
     int count = 0;
     private ArrayList<ImageModal> imageModalArrayList;
@@ -40,7 +39,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_search_result);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -54,7 +53,7 @@ public class HomeActivity extends AppCompatActivity {
 
         imageModalArrayList = new ArrayList<>();
 
-        imageRVAdapter = new ImageRVAdapter(HomeActivity.this, imageModalArrayList, extras);
+        imageRVAdapter = new ImageRVAdapter(SearchResultActivity.this, imageModalArrayList, extras);
         imageRV.setAdapter(imageRVAdapter);
 
         getData(extras.getInt("userId"), 0, 100);
@@ -75,43 +74,9 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-
-        getData(extras.getInt("userId"), 0, 100);
-    }
-
-    private void startUploadActivity() {
-        Intent intent = new Intent(this, UploadActivity.class);
-        intent.putExtra("userId",extras.getInt("userId"));
-        intent.putExtra("firstName", extras.getString("firstName"));
-        intent.putExtra("lastName", extras.getString("lastName"));
-        intent.putExtra("token", extras.getString("token"));
-        startActivity(intent);
-    }
-
-    private void startProfileActivity() {
-        Intent intent = new Intent(this, ProfileActivity.class);
-        intent.putExtra("userId",extras.getInt("userId"));
-        intent.putExtra("firstName", extras.getString("firstName"));
-        intent.putExtra("lastName", extras.getString("lastName"));
-        intent.putExtra("token", extras.getString("token"));
-        startActivity(intent);
-    }
-
-    private void startSearchActivity() {
-        Intent intent = new Intent(this, SearchActivity.class);
-        intent.putExtra("userId",extras.getInt("userId"));
-        intent.putExtra("firstName", extras.getString("firstName"));
-        intent.putExtra("lastName", extras.getString("lastName"));
-        intent.putExtra("token", extras.getString("token"));
-        startActivity(intent);
-    }
-
     private void getData(int userId, int index, int length) {
         Log.d("getData", "INSIDE GETDATA");
-        Call<HomePageResponse> call = RetrofitClient.getInstance().getMyApi().getHomePage(userId, index, length);
+        Call<HomePageResponse> call = RetrofitClient.getInstance().getMyApi().getSearchResults(new Search(index, length, extras.getStringArrayList("tags")));
         call.enqueue(new Callback<HomePageResponse>() {
             @Override
             public void onResponse(Call<HomePageResponse> call, Response<HomePageResponse> response) {
@@ -124,7 +89,7 @@ public class HomeActivity extends AppCompatActivity {
                         Image elem = images.get(i);
                         Log.d("getData", elem.getDescription());
                         imageModalArrayList.add(new ImageModal(elem.getTitle(), elem.getDescription(), elem.getTags(), elem.getId(), elem.getUserId(), elem.getImgLoc()));
-                        imageRVAdapter = new ImageRVAdapter(HomeActivity.this, imageModalArrayList, extras);
+                        imageRVAdapter = new ImageRVAdapter(SearchResultActivity.this, imageModalArrayList, extras);
                         imageRV.setAdapter(imageRVAdapter);
                     }
                     loadingPB.setVisibility(View.INVISIBLE);
@@ -143,6 +108,34 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    private void startProfileActivity() {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra("userId",extras.getInt("userId"));
+        intent.putExtra("firstName", extras.getString("firstName"));
+        intent.putExtra("lastName", extras.getString("lastName"));
+        intent.putExtra("token", extras.getString("token"));
+        startActivity(intent);
+    }
+
+    private void startHomeActivity() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        Log.d("Login", Integer.toString(extras.getInt("userId")));
+        intent.putExtra("userId", extras.getInt("userId"));
+        intent.putExtra("firstName", extras.getString("firstName"));
+        intent.putExtra("lastName", extras.getString("lastName"));
+        intent.putExtra("token", extras.getString("token"));
+        startActivity(intent);
+    }
+
+    private void startUploadActivity() {
+        Intent intent = new Intent(this, UploadActivity.class);
+        intent.putExtra("userId",extras.getInt("userId"));
+        intent.putExtra("firstName", extras.getString("firstName"));
+        intent.putExtra("lastName", extras.getString("lastName"));
+        intent.putExtra("token", extras.getString("token"));
+        startActivity(intent);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -151,17 +144,13 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = null;
         switch (item.getItemId()) {
             case R.id.action_home:
-                Toast.makeText(getApplicationContext(), "Already on home page", Toast.LENGTH_LONG).show();
+                startHomeActivity();
                 return true;
 
             case R.id.action_search:
-//                intent = new Intent(this, CallActivity.class);
-//                startActivity(intent);
-//                Toast.makeText(getApplicationContext(), "search page", Toast.LENGTH_LONG).show();
-                startSearchActivity();
+                Toast.makeText(getApplicationContext(), "Already on search page", Toast.LENGTH_LONG).show();
                 return true;
 
             case R.id.action_upload:
@@ -174,7 +163,6 @@ public class HomeActivity extends AppCompatActivity {
 
             default:
                 return super.onOptionsItemSelected(item);
-
         }
     }
 }

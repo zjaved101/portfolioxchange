@@ -3,6 +3,7 @@ package com.example.frontend;
 import com.example.frontend.Body.LikeBody;
 import com.example.frontend.model.Image;
 import com.example.frontend.model.Login;
+import com.example.frontend.model.Search;
 import com.example.frontend.model.Signup;
 import com.example.frontend.model.User;
 import com.example.frontend.response.DetailResponse;
@@ -63,4 +64,7 @@ public interface Api {
     Call<User> getProfile(
         @Query("userId") int userId
     );
+
+    @POST("images/search")
+    Call<HomePageResponse> getSearchResults(@Body Search search);
 }
