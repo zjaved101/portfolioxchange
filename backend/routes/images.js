@@ -243,4 +243,38 @@ router.post("/dislike", async (req, res) => {
     return res.send({"success": true, "likes": false});
 });
 
+router.post('/search', async (req, res) => {
+    searchKeys = [];
+    req.body.tags.forEach(key => {
+        searchKeys.push({
+            tags: {
+                [Op.substring]: key
+            }
+        });
+    });
+
+    console.log(searchKeys);
+
+    let images = await Image.findAll({
+        where: {
+            [Op.or]: searchKeys
+        }
+    });
+    if(!images.length) {
+        return res.status(400).send({"success": false, "error": "no images found", "images": []});
+    }
+    images.forEach(element => {
+        let likeList = element.dataValues.likeList;
+        element.dataValues.currentUserLikes = false;
+        if(likeList.includes(parseInt(req.body.userId))) {
+            element.dataValues.currentUserLikes = true;
+        }
+    });
+
+    return res.send({
+        "success": true,
+        "images": images.slice(parseInt(req.body.index), parseInt(req.body.index) + parseInt(req.body.length))
+    });
+});
+
 module.exports = router;
