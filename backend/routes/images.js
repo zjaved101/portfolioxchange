@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const Image = require('../library/model/images')
 const User = require('../library/model/users')
+const Portfolio = require('../library/model/portfolio')
 const multer = require('multer');
 const ImgurStorage = require('multer-storage-imgur');
 const path = require('path');
@@ -275,6 +276,47 @@ router.post('/search', async (req, res) => {
         "success": true,
         "images": images.slice(parseInt(req.body.index), parseInt(req.body.index) + parseInt(req.body.length))
     });
+});
+
+router.post('/share', async (req,res) => {
+    console.log(req.body.userId, req.body.authorId, req.body.imageId);
+
+    let portfolios = await Portfolio.findAll({
+        where: {
+            [Op.and]: [
+                {UserId: req.body.userId},
+                {authorId: req.body.authorId}
+            ]
+        }
+    });
+
+    if(!portfolios.length) {
+        await Portfolio.create({
+            UserId: req.body.userId, // person to be shared with
+            authorId: req.body.authorId, // original person who uploaded
+            portfolio: [req.body.imageId]
+        });
+    }
+    else {
+        let portfolio = portfolios[0].dataValues.portfolio;
+        if(!portfolio.includes(req.body.imageId))
+            portfolio.push(req.body.imageId);
+        else 
+            return res.send({"success": false, "error": "Image has already been shared"});
+
+        await Portfolio.update({
+            portfolio: portfolio,
+        }, {
+            where: {
+                [Op.and]: [
+                    {UserId: req.body.userId},
+                    {authorId: req.body.authorId}
+                ]
+            }
+        });
+    }
+
+    return res.send({"success": true});
 });
 
 module.exports = router;
