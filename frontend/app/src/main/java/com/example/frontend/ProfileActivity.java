@@ -92,7 +92,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = null;
         switch (item.getItemId()) {
             case R.id.action_home:
                 startHomeActivity();

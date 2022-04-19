@@ -7,13 +7,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -27,12 +25,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeActivity extends AppCompatActivity {
+public class UploadedImagesActivity extends AppCompatActivity {
 
     int count = 0;
     private ArrayList<ImageModal> imageModalArrayList;
     private RecyclerView imageRV;
-    private ImageRVAdapter imageRVAdapter;
+    private ImageUploadedRVAdapter imageUploadedRVAdapter;
     private ProgressBar loadingPB;
     private NestedScrollView nestedSV;
     private Bundle extras;
@@ -40,7 +38,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_uploaded_images);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -54,10 +52,10 @@ public class HomeActivity extends AppCompatActivity {
 
         imageModalArrayList = new ArrayList<>();
 
-        imageRVAdapter = new ImageRVAdapter(HomeActivity.this, imageModalArrayList, extras);
-        imageRV.setAdapter(imageRVAdapter);
+        imageUploadedRVAdapter = new ImageUploadedRVAdapter(UploadedImagesActivity.this, imageModalArrayList, extras);
+        imageRV.setAdapter(imageUploadedRVAdapter);
 
-        getData(extras.getInt("userId"), 0, 100);
+        getUploaded(extras.getInt("userId"), 0, 100);
 
 
         LinearLayoutManager manager = new LinearLayoutManager(this);
@@ -69,17 +67,51 @@ public class HomeActivity extends AppCompatActivity {
                 // on scroll change checking when users scroll as bottom.
                 if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
                     loadingPB.setVisibility(View.VISIBLE);
-                    getData(extras.getInt("userId"), 0, 100);
+                    getUploaded(extras.getInt("userId"), 0, 100);
                 }
             }
         });
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
+    private void getUploaded(int userId, int index, int length) {
+        Log.d("getData", "INSIDE GETDATA");
+        Call<HomePageResponse> call = RetrofitClient.getInstance().getMyApi().getUploaded(userId, index, length);
+        call.enqueue(new Callback<HomePageResponse>() {
+            @Override
+            public void onResponse(Call<HomePageResponse> call, Response<HomePageResponse> response) {
+                imageRV.setVisibility(View.VISIBLE);
+                Log.d("getData", "INSIDE RESPONSE");
+                Log.d("getData", response.toString());
+                if(response.isSuccessful() && response.body() != null) {
+                    List<Image> images = response.body().getImages();
+                    for(int i = count; i < images.size(); i++) {
+                        Image elem = images.get(i);
+                        Log.d("getData", elem.getDescription());
+                        imageModalArrayList.add(new ImageModal(elem.getTitle(), elem.getDescription(), elem.getTags(), elem.getId(), elem.getUserId(), elem.getImgLoc()));
+                        imageUploadedRVAdapter = new ImageUploadedRVAdapter(UploadedImagesActivity.this, imageModalArrayList, extras);
+                        imageRV.setAdapter(imageUploadedRVAdapter);
+                    }
+                    loadingPB.setVisibility(View.INVISIBLE);
+                    count = images.size();
+                } else {
+                    Log.d("onResponse","response broke");
+                }
+            }
 
-        getData(extras.getInt("userId"), 0, 100);
+            @Override
+            public void onFailure(Call<HomePageResponse> call, Throwable t) {
+                Log.e("onFailure error", t.getMessage());
+                Toast.makeText(getApplicationContext(), "An error has occurred", Toast.LENGTH_LONG).show();
+            }
+
+        });
+    }
+
+    private void startShareActivity() {
+        Intent intent = new Intent(this, ShareActivity.class);
+        intent.putExtra("authorId", extras.getInt("authorId"));
+        intent.putExtra("imageId", extras.getInt("imageId"));
+        startActivity(intent);
     }
 
     private void startUploadActivity() {
@@ -100,6 +132,16 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void startHomeActivity() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        Log.d("Login", Integer.toString(extras.getInt("userId")));
+        intent.putExtra("userId", extras.getInt("userId"));
+        intent.putExtra("firstName", extras.getString("firstName"));
+        intent.putExtra("lastName", extras.getString("lastName"));
+        intent.putExtra("token", extras.getString("token"));
+        startActivity(intent);
+    }
+
     private void startSearchActivity() {
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra("userId",extras.getInt("userId"));
@@ -113,40 +155,6 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(this, UploadedImagesActivity.class);
         intent.putExtra("userId",extras.getInt("userId"));
         startActivity(intent);
-    }
-
-    private void getData(int userId, int index, int length) {
-        Log.d("getData", "INSIDE GETDATA");
-        Call<HomePageResponse> call = RetrofitClient.getInstance().getMyApi().getHomePage(userId, index, length);
-        call.enqueue(new Callback<HomePageResponse>() {
-            @Override
-            public void onResponse(Call<HomePageResponse> call, Response<HomePageResponse> response) {
-                imageRV.setVisibility(View.VISIBLE);
-                Log.d("getData", "INSIDE RESPONSE");
-                Log.d("getData", response.toString());
-                if(response.isSuccessful() && response.body() != null) {
-                    List<Image> images = response.body().getImages();
-                    for(int i = count; i < images.size(); i++) {
-                        Image elem = images.get(i);
-                        Log.d("getData", elem.getDescription());
-                        imageModalArrayList.add(new ImageModal(elem.getTitle(), elem.getDescription(), elem.getTags(), elem.getId(), elem.getUserId(), elem.getImgLoc()));
-                        imageRVAdapter = new ImageRVAdapter(HomeActivity.this, imageModalArrayList, extras);
-                        imageRV.setAdapter(imageRVAdapter);
-                    }
-                    loadingPB.setVisibility(View.INVISIBLE);
-                    count = images.size();
-                } else {
-                    Log.d("onResponse","response broke");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<HomePageResponse> call, Throwable t) {
-                Log.e("onFailure error", t.getMessage());
-                Toast.makeText(getApplicationContext(), "An error has occurred", Toast.LENGTH_LONG).show();
-            }
-
-        });
     }
 
     @Override

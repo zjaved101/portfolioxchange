@@ -73,4 +73,11 @@ public interface Api {
     Call<GeneralResponse> shareImage(@Body ShareBody body);
 
     @GET("users/getInfo") Call<User> getUser(@Query("email") String email);
+
+    @GET("images/uploaded")
+    Call<HomePageResponse> getUploaded(
+            @Query("userId") int userId,
+            @Query("index") int index,
+            @Query("length") int length
+    );
 }

@@ -23,7 +23,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ImageDetailActivity extends AppCompatActivity {
+public class ImageShareDetailActivity extends AppCompatActivity {
 
     private Bundle extras;
     private TextView imageDetailTitle;
@@ -34,14 +34,14 @@ public class ImageDetailActivity extends AppCompatActivity {
 
     private Button likeBtn;
     private Button dislikeBtn;
-//    private Button shareBtn;
+    private Button shareBtn;
 
     private int result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image_detail);
+        setContentView(R.layout.activity_image_share_detail);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -79,13 +79,13 @@ public class ImageDetailActivity extends AppCompatActivity {
             }
         });
 
-//        shareBtn = findViewById(R.id.imageDetailShare);
-//        shareBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startShareActivity();
-//            }
-//        });
+        shareBtn = findViewById(R.id.imageDetailShare);
+        shareBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startShareActivity();
+            }
+        });
     }
 
     private void getImageDetails() {
@@ -206,21 +206,6 @@ public class ImageDetailActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void startSearchActivity() {
-        Intent intent = new Intent(this, SearchActivity.class);
-        intent.putExtra("userId",extras.getInt("userId"));
-        intent.putExtra("firstName", extras.getString("firstName"));
-        intent.putExtra("lastName", extras.getString("lastName"));
-        intent.putExtra("token", extras.getString("token"));
-        startActivity(intent);
-    }
-
-    private void startUploadedImagesActivity() {
-        Intent intent = new Intent(this, UploadedImagesActivity.class);
-        intent.putExtra("userId",extras.getInt("userId"));
-        startActivity(intent);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -236,7 +221,7 @@ public class ImageDetailActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_search:
-                startSearchActivity();
+                Toast.makeText(getApplicationContext(), "search page", Toast.LENGTH_LONG).show();
                 return true;
 
             case R.id.action_upload:
@@ -245,10 +230,6 @@ public class ImageDetailActivity extends AppCompatActivity {
 
             case R.id.action_profile:
                 startProfileActivity();
-                return true;
-
-            case R.id.action_uploaded:
-                startUploadedImagesActivity();
                 return true;
 
             default:
