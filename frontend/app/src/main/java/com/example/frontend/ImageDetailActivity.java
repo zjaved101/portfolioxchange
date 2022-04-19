@@ -34,6 +34,7 @@ public class ImageDetailActivity extends AppCompatActivity {
 
     private Button likeBtn;
     private Button dislikeBtn;
+    private Button shareBtn;
 
     private int result;
 
@@ -75,6 +76,14 @@ public class ImageDetailActivity extends AppCompatActivity {
                 imageDetailLikes.setText(Integer.toString(result));
                 likeBtn.setEnabled(true);
                 dislikeBtn.setEnabled(false);
+            }
+        });
+
+        shareBtn = findViewById(R.id.imageDetailShare);
+        shareBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startShareActivity();
             }
         });
     }
@@ -162,6 +171,13 @@ public class ImageDetailActivity extends AppCompatActivity {
         });
     }
 
+    private void startShareActivity() {
+        Intent intent = new Intent(this, ShareActivity.class);
+        intent.putExtra("authorId", extras.getInt("authorId"));
+        intent.putExtra("imageId", extras.getInt("imageId"));
+        startActivity(intent);
+    }
+
     private void startUploadActivity() {
         Intent intent = new Intent(this, UploadActivity.class);
         intent.putExtra("userId",extras.getInt("userId"));
@@ -205,8 +221,6 @@ public class ImageDetailActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_search:
-//                intent = new Intent(this, CallActivity.class);
-//                startActivity(intent);
                 Toast.makeText(getApplicationContext(), "search page", Toast.LENGTH_LONG).show();
                 return true;
 

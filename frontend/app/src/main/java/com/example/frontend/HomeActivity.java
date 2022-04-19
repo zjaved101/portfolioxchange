@@ -158,9 +158,6 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_search:
-//                intent = new Intent(this, CallActivity.class);
-//                startActivity(intent);
-//                Toast.makeText(getApplicationContext(), "search page", Toast.LENGTH_LONG).show();
                 startSearchActivity();
                 return true;
 

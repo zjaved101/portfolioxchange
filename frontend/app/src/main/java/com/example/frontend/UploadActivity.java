@@ -183,7 +183,6 @@ public class UploadActivity extends AppCompatActivity {
 
     private void uploadImage(View v) {
         File imageFile = new File(part_image);
-//        RequestBody reqFile = RequestBody.create(MediaType.parse("multipart/form-file"), imageFile);
         RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), imageFile);
         MultipartBody.Part image = MultipartBody.Part.createFormData("image", imageFile.getName(), reqFile);
 
@@ -241,6 +240,15 @@ public class UploadActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void startSearchActivity() {
+        Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtra("userId",extras.getInt("userId"));
+        intent.putExtra("firstName", extras.getString("firstName"));
+        intent.putExtra("lastName", extras.getString("lastName"));
+        intent.putExtra("token", extras.getString("token"));
+        startActivity(intent);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -256,9 +264,7 @@ public class UploadActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_search:
-//                intent = new Intent(this, CallActivity.class);
-//                startActivity(intent);
-                Toast.makeText(getApplicationContext(), "search page", Toast.LENGTH_LONG).show();
+                startSearchActivity();
                 return true;
 
             case R.id.action_upload:

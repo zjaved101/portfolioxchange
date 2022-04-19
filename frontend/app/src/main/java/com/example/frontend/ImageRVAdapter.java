@@ -82,6 +82,7 @@ public class ImageRVAdapter extends RecyclerView.Adapter<ImageRVAdapter.ViewHold
             Intent intent = new Intent(context, ImageDetailActivity.class);
             intent.putExtra("imageId", Integer.parseInt(imageIdTV.getText().toString()));
             intent.putExtra("userId", extras.getInt("userId"));
+            intent.putExtra("authorId", Integer.parseInt(userIdTV.getText().toString()));
             context.startActivity(intent);
         }
     }
