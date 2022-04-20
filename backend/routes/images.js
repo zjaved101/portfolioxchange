@@ -319,4 +319,66 @@ router.post('/share', async (req,res) => {
     return res.send({"success": true});
 });
 
+router.get("/uploaded", async (req, res) => {
+    console.log(req.query.userId, req.query.index, req.query.length);
+
+    let images = await Image.findAll({
+        where: {
+            UserId: req.query.userId
+        },
+        order: [
+            ['likes', 'DESC']
+        ]
+    });
+
+    if (images.length) {
+        images.forEach(element => {
+            let likeList = JSON.parse(JSON.stringify(element.dataValues.likeList));
+            element.dataValues.currentUserLikes = false;
+            if(likeList.includes(parseInt(req.query.userId))) {
+                element.dataValues.currentUserLikes = true;
+            }
+        });
+        return res.send({
+            "success": true,
+            "images": images.slice(parseInt(req.query.index), parseInt(req.query.index) + parseInt(req.query.length))
+        });
+    } else {
+        return res.send({"success": false, "images": []});
+    }
+});
+
+router.get("/shared", async (req, res) => {
+    let portfolios = await Portfolio.findAll({
+        where: {
+            UserId: req.query.userId
+        }
+    });
+
+    if (portfolios.length) {
+        let images = await Image.findAll({
+            where: {
+                id: {
+                    [Op.or]: portfolios[0].portfolio
+                }
+            }
+        });
+
+        images.forEach(element => {
+            let likeList = element.dataValues.likeList;
+            element.dataValues.currentUserLikes = false;
+            if(likeList.includes(parseInt(req.body.userId))) {
+                element.dataValues.currentUserLikes = true;
+            }
+        });
+    
+        return res.send({
+            "success": true,
+            "images": images.slice(parseInt(req.query.index), parseInt(req.query.index) + parseInt(req.query.length))
+        });
+    } else {
+        return res.send({"success": false, "images": []});
+    }
+});
+
 module.exports = router;
