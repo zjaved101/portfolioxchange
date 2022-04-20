@@ -16,13 +16,13 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class ImageRVAdapter extends RecyclerView.Adapter<ImageRVAdapter.ViewHolder> {
+public class ImageUploadedRVAdapter extends RecyclerView.Adapter<ImageUploadedRVAdapter.ViewHolder> {
 
     private Context context;
     private ArrayList<ImageModal> imageModalArrayList;
     private Bundle extras;
 
-    public ImageRVAdapter(Context context, ArrayList<ImageModal> imageModalArrayList, Bundle extras) {
+    public ImageUploadedRVAdapter(Context context, ArrayList<ImageModal> imageModalArrayList, Bundle extras) {
         this.context = context;
         this.imageModalArrayList = imageModalArrayList;
         Picasso.get().setLoggingEnabled(true);
@@ -32,12 +32,12 @@ public class ImageRVAdapter extends RecyclerView.Adapter<ImageRVAdapter.ViewHold
 
     @NonNull
     @Override
-    public ImageRVAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ImageUploadedRVAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.image_rv_item, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ImageRVAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ImageUploadedRVAdapter.ViewHolder holder, int position) {
         ImageModal images = imageModalArrayList.get(position);
         holder.imageTitleTV.setText(images.getTitle());
         holder.imageDescTV.setText(images.getDescription());
@@ -73,13 +73,13 @@ public class ImageRVAdapter extends RecyclerView.Adapter<ImageRVAdapter.ViewHold
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startImageDetailActivity(view);
+                    startImageShareDetailActivity(view);
                 }
             });
         }
 
-        private void startImageDetailActivity(View v) {
-            Intent intent = new Intent(context, ImageDetailActivity.class);
+        private void startImageShareDetailActivity(View v) {
+            Intent intent = new Intent(context, ImageShareDetailActivity.class);
             intent.putExtra("imageId", Integer.parseInt(imageIdTV.getText().toString()));
             intent.putExtra("userId", extras.getInt("userId"));
             intent.putExtra("authorId", Integer.parseInt(userIdTV.getText().toString()));

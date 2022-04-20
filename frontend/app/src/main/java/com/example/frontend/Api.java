@@ -1,6 +1,7 @@
 package com.example.frontend;
 
 import com.example.frontend.Body.LikeBody;
+import com.example.frontend.Body.ShareBody;
 import com.example.frontend.model.Image;
 import com.example.frontend.model.Login;
 import com.example.frontend.model.Search;
@@ -67,4 +68,23 @@ public interface Api {
 
     @POST("images/search")
     Call<HomePageResponse> getSearchResults(@Body Search search);
+
+    @POST("images/share")
+    Call<GeneralResponse> shareImage(@Body ShareBody body);
+
+    @GET("users/getInfo") Call<User> getUser(@Query("email") String email);
+
+    @GET("images/uploaded")
+    Call<HomePageResponse> getUploaded(
+            @Query("userId") int userId,
+            @Query("index") int index,
+            @Query("length") int length
+    );
+
+    @GET("images/shared")
+    Call<HomePageResponse> getShared(
+            @Query("userId") int userId,
+            @Query("index") int index,
+            @Query("length") int length
+    );
 }

@@ -7,13 +7,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -27,7 +25,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeActivity extends AppCompatActivity {
+public class SharedImagesActivity extends AppCompatActivity {
 
     int count = 0;
     private ArrayList<ImageModal> imageModalArrayList;
@@ -40,7 +38,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_shared_images);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -54,7 +52,7 @@ public class HomeActivity extends AppCompatActivity {
 
         imageModalArrayList = new ArrayList<>();
 
-        imageRVAdapter = new ImageRVAdapter(HomeActivity.this, imageModalArrayList, extras);
+        imageRVAdapter = new ImageRVAdapter(SharedImagesActivity.this, imageModalArrayList, extras);
         imageRV.setAdapter(imageRVAdapter);
 
         getData(extras.getInt("userId"), 0, 100);
@@ -122,8 +120,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void getData(int userId, int index, int length) {
-        Log.d("getData", "INSIDE GETDATA");
-        Call<HomePageResponse> call = RetrofitClient.getInstance().getMyApi().getHomePage(userId, index, length);
+        Call<HomePageResponse> call = RetrofitClient.getInstance().getMyApi().getShared(extras.getInt("userId"), index, length);
         call.enqueue(new Callback<HomePageResponse>() {
             @Override
             public void onResponse(Call<HomePageResponse> call, Response<HomePageResponse> response) {
@@ -136,7 +133,7 @@ public class HomeActivity extends AppCompatActivity {
                         Image elem = images.get(i);
                         Log.d("getData", elem.getDescription());
                         imageModalArrayList.add(new ImageModal(elem.getTitle(), elem.getDescription(), elem.getTags(), elem.getId(), elem.getUserId(), elem.getImgLoc()));
-                        imageRVAdapter = new ImageRVAdapter(HomeActivity.this, imageModalArrayList, extras);
+                        imageRVAdapter = new ImageRVAdapter(SharedImagesActivity.this, imageModalArrayList, extras);
                         imageRV.setAdapter(imageRVAdapter);
                     }
                     loadingPB.setVisibility(View.INVISIBLE);
@@ -185,7 +182,8 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_shared:
-                startSharedImagesActivity();
+//                startSharedImagesActivity();
+                Toast.makeText(this, "Already in Shared Images", Toast.LENGTH_SHORT).show();
                 return true;
 
             default:

@@ -183,7 +183,6 @@ public class UploadActivity extends AppCompatActivity {
 
     private void uploadImage(View v) {
         File imageFile = new File(part_image);
-//        RequestBody reqFile = RequestBody.create(MediaType.parse("multipart/form-file"), imageFile);
         RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), imageFile);
         MultipartBody.Part image = MultipartBody.Part.createFormData("image", imageFile.getName(), reqFile);
 
@@ -241,6 +240,27 @@ public class UploadActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void startSearchActivity() {
+        Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtra("userId",extras.getInt("userId"));
+        intent.putExtra("firstName", extras.getString("firstName"));
+        intent.putExtra("lastName", extras.getString("lastName"));
+        intent.putExtra("token", extras.getString("token"));
+        startActivity(intent);
+    }
+
+    private void startUploadedImagesActivity() {
+        Intent intent = new Intent(this, UploadedImagesActivity.class);
+        intent.putExtra("userId",extras.getInt("userId"));
+        startActivity(intent);
+    }
+
+    private void startSharedImagesActivity() {
+        Intent intent = new Intent(this, SharedImagesActivity.class);
+        intent.putExtra("userId",extras.getInt("userId"));
+        startActivity(intent);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -249,16 +269,13 @@ public class UploadActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = null;
         switch (item.getItemId()) {
             case R.id.action_home:
                 startHomeActivity();
                 return true;
 
             case R.id.action_search:
-//                intent = new Intent(this, CallActivity.class);
-//                startActivity(intent);
-                Toast.makeText(getApplicationContext(), "search page", Toast.LENGTH_LONG).show();
+                startSearchActivity();
                 return true;
 
             case R.id.action_upload:
@@ -267,6 +284,14 @@ public class UploadActivity extends AppCompatActivity {
 
             case R.id.action_profile:
                 startProfileActivity();
+                return true;
+
+            case R.id.action_uploaded:
+                startUploadedImagesActivity();
+                return true;
+
+            case R.id.action_shared:
+                startSharedImagesActivity();
                 return true;
 
             default:

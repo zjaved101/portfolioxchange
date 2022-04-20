@@ -23,7 +23,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ImageDetailActivity extends AppCompatActivity {
+public class ImageShareDetailActivity extends AppCompatActivity {
 
     private Bundle extras;
     private TextView imageDetailTitle;
@@ -34,14 +34,14 @@ public class ImageDetailActivity extends AppCompatActivity {
 
     private Button likeBtn;
     private Button dislikeBtn;
-//    private Button shareBtn;
+    private Button shareBtn;
 
     private int result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image_detail);
+        setContentView(R.layout.activity_image_share_detail);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -79,13 +79,13 @@ public class ImageDetailActivity extends AppCompatActivity {
             }
         });
 
-//        shareBtn = findViewById(R.id.imageDetailShare);
-//        shareBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startShareActivity();
-//            }
-//        });
+        shareBtn = findViewById(R.id.imageDetailShare);
+        shareBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startShareActivity();
+            }
+        });
     }
 
     private void getImageDetails() {
@@ -196,19 +196,19 @@ public class ImageDetailActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void startHomeActivity() {
-        Intent intent = new Intent(this, HomeActivity.class);
-        Log.d("Login", Integer.toString(extras.getInt("userId")));
-        intent.putExtra("userId", extras.getInt("userId"));
+    private void startSearchActivity() {
+        Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtra("userId",extras.getInt("userId"));
         intent.putExtra("firstName", extras.getString("firstName"));
         intent.putExtra("lastName", extras.getString("lastName"));
         intent.putExtra("token", extras.getString("token"));
         startActivity(intent);
     }
 
-    private void startSearchActivity() {
-        Intent intent = new Intent(this, SearchActivity.class);
-        intent.putExtra("userId",extras.getInt("userId"));
+    private void startHomeActivity() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        Log.d("Login", Integer.toString(extras.getInt("userId")));
+        intent.putExtra("userId", extras.getInt("userId"));
         intent.putExtra("firstName", extras.getString("firstName"));
         intent.putExtra("lastName", extras.getString("lastName"));
         intent.putExtra("token", extras.getString("token"));
