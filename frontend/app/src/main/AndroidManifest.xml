@@ -16,6 +16,9 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".SharedImagesActivity"
+            android:exported="false" />
+        <activity
             android:name=".ImageShareDetailActivity"
             android:exported="false" />
         <activity

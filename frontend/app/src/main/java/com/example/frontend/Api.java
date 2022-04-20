@@ -80,4 +80,11 @@ public interface Api {
             @Query("index") int index,
             @Query("length") int length
     );
+
+    @GET("images/shared")
+    Call<HomePageResponse> getShared(
+            @Query("userId") int userId,
+            @Query("index") int index,
+            @Query("length") int length
+    );
 }

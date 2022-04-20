@@ -249,6 +249,18 @@ public class UploadActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void startUploadedImagesActivity() {
+        Intent intent = new Intent(this, UploadedImagesActivity.class);
+        intent.putExtra("userId",extras.getInt("userId"));
+        startActivity(intent);
+    }
+
+    private void startSharedImagesActivity() {
+        Intent intent = new Intent(this, SharedImagesActivity.class);
+        intent.putExtra("userId",extras.getInt("userId"));
+        startActivity(intent);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -257,7 +269,6 @@ public class UploadActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = null;
         switch (item.getItemId()) {
             case R.id.action_home:
                 startHomeActivity();
@@ -273,6 +284,14 @@ public class UploadActivity extends AppCompatActivity {
 
             case R.id.action_profile:
                 startProfileActivity();
+                return true;
+
+            case R.id.action_uploaded:
+                startUploadedImagesActivity();
+                return true;
+
+            case R.id.action_shared:
+                startSharedImagesActivity();
                 return true;
 
             default:

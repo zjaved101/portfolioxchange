@@ -196,6 +196,15 @@ public class ImageShareDetailActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void startSearchActivity() {
+        Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtra("userId",extras.getInt("userId"));
+        intent.putExtra("firstName", extras.getString("firstName"));
+        intent.putExtra("lastName", extras.getString("lastName"));
+        intent.putExtra("token", extras.getString("token"));
+        startActivity(intent);
+    }
+
     private void startHomeActivity() {
         Intent intent = new Intent(this, HomeActivity.class);
         Log.d("Login", Integer.toString(extras.getInt("userId")));
@@ -203,6 +212,18 @@ public class ImageShareDetailActivity extends AppCompatActivity {
         intent.putExtra("firstName", extras.getString("firstName"));
         intent.putExtra("lastName", extras.getString("lastName"));
         intent.putExtra("token", extras.getString("token"));
+        startActivity(intent);
+    }
+
+    private void startUploadedImagesActivity() {
+        Intent intent = new Intent(this, UploadedImagesActivity.class);
+        intent.putExtra("userId",extras.getInt("userId"));
+        startActivity(intent);
+    }
+
+    private void startSharedImagesActivity() {
+        Intent intent = new Intent(this, SharedImagesActivity.class);
+        intent.putExtra("userId",extras.getInt("userId"));
         startActivity(intent);
     }
 
@@ -214,14 +235,13 @@ public class ImageShareDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = null;
         switch (item.getItemId()) {
             case R.id.action_home:
                 startHomeActivity();
                 return true;
 
             case R.id.action_search:
-                Toast.makeText(getApplicationContext(), "search page", Toast.LENGTH_LONG).show();
+                startSearchActivity();
                 return true;
 
             case R.id.action_upload:
@@ -230,6 +250,14 @@ public class ImageShareDetailActivity extends AppCompatActivity {
 
             case R.id.action_profile:
                 startProfileActivity();
+                return true;
+
+            case R.id.action_uploaded:
+                startUploadedImagesActivity();
+                return true;
+
+            case R.id.action_shared:
+                startSharedImagesActivity();
                 return true;
 
             default:
