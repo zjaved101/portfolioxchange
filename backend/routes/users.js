@@ -32,4 +32,28 @@ router.get('/profile', async (req, res) => {
   
 });
 
+router.get("/getInfo", async(req, res) => {
+  let users = await Users.findAll({
+    where: {
+        email: req.query.email
+    }
+  });
+
+  if(!users.length) {
+    return res.status(400).send({"success": false, "error": "user id does not exist"});
+  }
+
+  return res.status(200).json({
+    'id': users[0].id,
+    'firstName': users[0].firstName,
+    'lastName': users[0].lastName,
+    'email': users[0].email,
+    'portfolio': users[0].portfolio,
+    'uploadCount': users[0].uploadCount,
+    'likeCount': users[0].likeCount,
+    'token': users[0].token,
+    'success': true
+  });
+});
+
 module.exports = router;
