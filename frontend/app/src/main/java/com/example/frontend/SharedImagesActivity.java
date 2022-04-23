@@ -119,6 +119,16 @@ public class SharedImagesActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void startHomeActivity() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        Log.d("Login", Integer.toString(extras.getInt("userId")));
+        intent.putExtra("userId", extras.getInt("userId"));
+        intent.putExtra("firstName", extras.getString("firstName"));
+        intent.putExtra("lastName", extras.getString("lastName"));
+        intent.putExtra("token", extras.getString("token"));
+        startActivity(intent);
+    }
+
     private void getData(int userId, int index, int length) {
         Call<HomePageResponse> call = RetrofitClient.getInstance().getMyApi().getShared(extras.getInt("userId"), index, length);
         call.enqueue(new Callback<HomePageResponse>() {
@@ -162,7 +172,7 @@ public class SharedImagesActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_home:
-                Toast.makeText(getApplicationContext(), "Already on home page", Toast.LENGTH_LONG).show();
+                startHomeActivity();
                 return true;
 
             case R.id.action_search:
@@ -182,7 +192,6 @@ public class SharedImagesActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_shared:
-//                startSharedImagesActivity();
                 Toast.makeText(this, "Already in Shared Images", Toast.LENGTH_SHORT).show();
                 return true;
 
