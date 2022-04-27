@@ -173,7 +173,7 @@ public class UploadedImagesActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_home:
-                Toast.makeText(getApplicationContext(), "Already on home page", Toast.LENGTH_LONG).show();
+                startHomeActivity();
                 return true;
 
             case R.id.action_search:
