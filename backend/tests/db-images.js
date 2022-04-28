@@ -5,7 +5,7 @@ async function initial() {
     console.log("The table for the User model was just (re)created!");
 
     Images.create({
-        imgLoc: '/temp/path',
+        imgLoc: 'https://www.theedadvocate.org/wp-content/uploads/2016/02/board-361516_960_720.jpg',
         likes: 0,
         UserId: 1,
         title: 'Test',
